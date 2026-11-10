@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hubungkan Semua Pihak Mr. Bread</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .pattern-bg {
+            background-color: #090d16;
+            background-image: radial-gradient(#ef4444 0.8px, transparent 0.8px), radial-gradient(#ef4444 0.8px, #090d16 0.8px);
+            background-size: 32px 32px;
+            background-position: 0 0, 16px 16px;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #ef4444; border-radius: 4px; }
+        .selected-node { border-color: #f59e0b !important; background-color: rgba(245, 158, 11, 0.15) !important; box-shadow: 0 0 15px rgba(245, 158, 11, 0.3); }
+        .connected-node { border-color: #10b981 !important; background-color: rgba(16, 185, 129, 0.15) !important; opacity: 0.85; pointer-events: none; }
+    </style>
+</head>
+<body class="pattern-bg min-h-screen text-slate-100 flex flex-col justify-between selection:bg-red-500 selection:text-white">
+
+    <!-- TOP HEADER -->
+    <header class="bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-4 py-3 sticky top-0 z-50 flex flex-wrap justify-between items-center gap-2 shadow-xl">
+        <div class="flex items-center space-x-3">
+            <div class="bg-red-600 rounded-2xl px-3.5 py-1.5 shadow-lg shadow-red-600/30 flex items-center space-x-2 border border-red-500">
+                <span class="font-extrabold tracking-tight text-white text-sm">Mr. Bread</span>
+            </div>
+            <h1 class="text-xs sm:text-sm font-bold bg-gradient-to-r from-red-400 via-pink-400 to-amber-400 bg-clip-text text-transparent hidden sm:block">
+                Hubungkan Semua Pihak Mr. Bread
+            </h1>
+        </div>
+
+        <div class="flex items-center space-x-2">
+            <button id="mute-btn" onclick="toggleMute()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-xl text-xs font-semibold border border-slate-700 transition flex items-center space-x-1.5 cursor-pointer">
+                <i id="mute-icon" class="fa-solid fa-volume-high text-red-400"></i>
+                <span id="mute-text" class="hidden xs:inline">BGM: On</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 my-auto">
+
+        <!-- SCREEN 1: THE GATEWAY & HOOK -->
+        <div id="screen-gateway" class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-xl relative overflow-hidden">
+            <div class="absolute -right-16 -top-16 w-48 h-48 bg-red-600/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -left-16 -bottom-16 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="text-center space-y-4 mb-6">
+                <span class="bg-red-500/10 text-red-400 border border-red-500/30 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest inline-block">
+                    Gamifikasi LMS • Connect the Dots Concept
+                </span>
+                <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white">
+                    Hubungkan Semua Pihak <span class="text-red-500">Mr. Bread</span>
+                </h2>
+                
+                <!-- HOOK (WHY) WITH EXACT USER WORDING -->
+                <div class="bg-slate-800/80 border-l-4 border-red-500 p-4 rounded-r-2xl text-left text-sm sm:text-base text-slate-300 leading-relaxed shadow-inner">
+                    <p class="font-bold text-white mb-1"><i class="fa-solid fa-bolt text-amber-400 mr-2"></i>Kenapa Tantangan Ini Penting</p>
+                    Pernahkah kamu membayangkan roti gagal sampai ke rak Indomaret gara-gara rantai informasi antara pabrik, PPC, QCA, dan cabang terputus? Menjadi Branch Factory Manager (BFM) harus mampu menghubungan sebab-akibat dari hulu ke hilir. Siap buktikan keahlianmu menyambungkan titik-titik operasional?
+                </div>
+            </div>
+
+            <div class="space-y-4 max-w-md mx-auto">
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Nama Lengkap Peserta</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+                            <i class="fa-solid fa-user-pen"></i>
+                        </span>
+                        <input type="text" id="player-name-input" placeholder="Contoh: Fathin Azhari" class="w-full pl-10 pr-4 py-3 bg-slate-950 border border-slate-700 rounded-2xl text-white placeholder-slate-500 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition font-medium">
+                    </div>
+                </div>
+                <button onclick="goToBriefing()" class="w-full py-3.5 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold rounded-2xl shadow-lg shadow-red-600/30 transition transform active:scale-95 flex items-center justify-center space-x-2 cursor-pointer">
+                    <span>Lanjut ke Briefing Misi</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: MISSION BRIEFING -->
+        <div id="screen-briefing" class="hidden bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-xl space-y-6">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                <div>
+                    <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">Mission Briefing</span>
+                    <h3 class="text-xl sm:text-2xl font-extrabold text-white" id="welcome-player-title">Halo, Pahlawan Pabrik</h3>
+                </div>
+                <div class="bg-red-500/20 text-red-400 p-3 rounded-2xl border border-red-500/30">
+                    <i class="fa-solid fa-puzzle-piece text-xl"></i>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-slate-950/60 p-4 rounded-2xl border border-slate-800 space-y-2">
+                    <h4 class="font-bold text-red-400 text-sm flex items-center"><i class="fa-solid fa-bullseye mr-2"></i> Konsep Permainan</h4>
+                    <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                        Ini adalah game Connect the Dots (Pasangan Konsep) dengan tali penghubung visual. Kolom A dan B diacak terpisah secara independen agar kamu benar-benar menganalisis pasangannya.
+                    </p>
+                </div>
+                <div class="bg-slate-950/60 p-4 rounded-2xl border border-slate-800 space-y-2">
+                    <h4 class="font-bold text-amber-400 text-sm flex items-center"><i class="fa-solid fa-award mr-2"></i> Aturan dan Milestone</h4>
+                    <ul class="text-xs sm:text-sm text-slate-300 space-y-1 list-disc list-inside">
+                        <li>Terbagi dalam 4 Level tantangan operasional</li>
+                        <li>Setiap koneksi benar mendapatkan 100 poin dan garis tali muncul</li>
+                        <li>Kumpulkan 4 Badge eksklusif di setiap akhir level</li>
+                    </ul>
+                </div>
+            </div>
+
+            <button onclick="startGame()" class="w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold rounded-2xl shadow-lg shadow-emerald-600/30 transition transform active:scale-95 flex items-center justify-center space-x-2 cursor-pointer">
+                <i class="fa-solid fa-play"></i>
+                <span>Mulai Menghubungkan Titik</span>
+            </button>
+        </div>
+
+        <!-- SCREEN 3: CORE EXECUTION (GAMEPLAY) -->
+        <div id="screen-game" class="hidden space-y-4">
+            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl backdrop-blur-xl flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-red-500/20 text-red-400 px-3 py-1.5 rounded-xl text-xs font-bold border border-red-500/30">
+                        Level <span id="current-level-num">1</span>/4
+                    </div>
+                    <div class="text-xs text-slate-400 font-semibold">
+                        Skor: <span id="current-score" class="text-white font-bold text-sm">0</span> pts
+                    </div>
+                </div>
+                <div class="flex-1 min-w-[150px] max-w-[250px]">
+                    <div class="flex justify-between text-xs font-bold text-slate-400 mb-1">
+                        <span>Progress Misi</span>
+                        <span id="progress-pct">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden border border-slate-700">
+                        <div id="progress-bar-fill" class="bg-gradient-to-r from-red-500 to-amber-500 h-full w-[0%] transition-all duration-300"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-xl space-y-6 relative overflow-hidden">
+                <div id="badge-notification" class="hidden absolute top-4 right-4 bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-bold px-3 py-1.5 rounded-xl animate-bounce flex items-center space-x-1.5 z-20">
+                    <i class="fa-solid fa-award"></i>
+                    <span id="badge-notif-text">Badge Terbuka</span>
+                </div>
+
+                <div>
+                    <span id="level-category" class="text-xs font-bold text-red-400 uppercase tracking-widest bg-red-500/10 px-3 py-1 rounded-full border border-red-500/20 inline-block mb-2">
+                        Level 1: Alur Hulu ke Hilir
+                    </span>
+                    <h3 id="level-instruction" class="text-base sm:text-lg font-bold text-white">
+                        Pilih titik di Kolom A (Kiri), lalu klik pasangannya di Kolom B (Kanan) untuk menarik garis tali
+                    </h3>
+                </div>
+
+                <div id="nodes-wrapper" class="relative grid grid-cols-1 md:grid-cols-2 gap-8 pt-2 pb-2">
+                    <svg id="svg-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-10 hidden md:block"></svg>
+
+                    <div class="space-y-3 relative z-20">
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center"><i class="fa-solid fa-circle-dot text-red-500 mr-1.5"></i> Kolom A (Titik Asal)</h4>
+                        <div id="left-nodes-container" class="space-y-3"></div>
+                    </div>
+
+                    <div class="space-y-3 relative z-20">
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center"><i class="fa-solid fa-circle-dot text-amber-400 mr-1.5"></i> Kolom B (Titik Tujuan)</h4>
+                        <div id="right-nodes-container" class="space-y-3"></div>
+                    </div>
+                </div>
+
+                <div id="feedback-box" class="hidden p-4 rounded-2xl border transition-all duration-300">
+                    <div class="flex items-center space-x-3">
+                        <div id="feedback-icon" class="text-xl"></div>
+                        <div>
+                            <h4 id="feedback-title" class="font-bold text-sm"></h4>
+                            <p id="feedback-desc" class="text-xs sm:text-sm text-slate-300"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 4: POST-ACTION DEBRIEF -->
+        <div id="screen-result" class="hidden bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-xl space-y-6 text-center">
+            <div class="w-20 h-20 bg-gradient-to-br from-amber-400 to-red-600 rounded-3xl mx-auto flex items-center justify-center shadow-xl shadow-red-600/30 text-white text-3xl font-extrabold border-2 border-amber-300">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+
+            <div class="space-y-2">
+                <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+                    Misi Selesai Sempurna
+                </span>
+                <h3 class="text-2xl sm:text-3xl font-extrabold text-white" id="result-player-name">Luar Biasa, BFM</h3>
+                <p class="text-sm text-slate-300 max-w-md mx-auto">
+                    Kamu berhasil merajut dan menghubungkan seluruh titik operasional dari hulu ke hilir pabrik Mr. Bread.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+                <div class="bg-slate-950/60 p-4 rounded-2xl border border-slate-800 space-y-1">
+                    <span class="text-xs text-slate-400 font-semibold uppercase">Total Skor Akhir</span>
+                    <div class="text-2xl font-extrabold text-amber-400" id="final-score-val">0 / 1000 Pts</div>
+                </div>
+                <div class="bg-slate-950/60 p-4 rounded-2xl border border-slate-800 space-y-2">
+                    <span class="text-xs text-slate-400 font-semibold uppercase">Koleksi Lencana (Badges)</span>
+                    <div id="earned-badges-list" class="flex flex-wrap gap-1.5"></div>
+                </div>
+            </div>
+
+            <div id="positive-reinforcement" class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700 text-xs sm:text-sm text-slate-200 italic">
+                "Kerja terarah, kunjungan bermakna, keputusan tepat, tindak lanjut konsisten."
+            </div>
+
+            <button onclick="restartGame()" class="py-3 px-8 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold rounded-2xl shadow-lg shadow-red-600/30 transition transform active:scale-95 inline-flex items-center space-x-2 cursor-pointer">
+                <i class="fa-solid fa-rotate-right"></i>
+                <span>Mainkan Ulang Misi</span>
+            </button>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900/80 border-t border-slate-800 py-3 text-center text-xs text-slate-500">
+        Education & Training Dept. © 2026
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC & WEB AUDIO API ENGINE -->
+    <script>
+        let audioCtx = null;
+        let isMuted = false;
+        let bgmInterval = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playTone(freq, type, duration, delay = 0) {
+            if (isMuted || !audioCtx) return;
+            setTimeout(() => {
+                try {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = type;
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + duration);
+                } catch(e) {}
+            }, delay);
+        }
+
+        function sfxClick() { playTone(500, 'sine', 0.06); }
+        function sfxConnect() {
+            playTone(523.25, 'triangle', 0.1, 0);
+            playTone(659.25, 'triangle', 0.15, 80);
+        }
+        function sfxIncorrect() {
+            playTone(200, 'sawtooth', 0.2, 0);
+            playTone(150, 'sawtooth', 0.25, 80);
+        }
+        function sfxBadge() {
+            playTone(440, 'sine', 0.1, 0);
+            playTone(554.37, 'sine', 0.1, 100);
+            playTone(659.25, 'sine', 0.1, 200);
+            playTone(880, 'sine', 0.3, 300);
+        }
+
+        function startBGM() {
+            if (bgmInterval) clearInterval(bgmInterval);
+            const notes = [261.63, 329.63, 392.00, 523.25];
+            let step = 0;
+            bgmInterval = setInterval(() => {
+                if (isMuted || !audioCtx) return;
+                playTone(notes[step], 'sine', 0.12);
+                step = (step + 1) % notes.length;
+            }, 350);
+        }
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            const icon = document.getElementById('mute-icon');
+            const text = document.getElementById('mute-text');
+            if (isMuted) {
+                icon.className = "fa-solid fa-volume-xmark text-slate-500";
+                text.textContent = "BGM: Off";
+            } else {
+                icon.className = "fa-solid fa-volume-high text-red-400";
+                text.textContent = "BGM: On";
+            }
+        }
+
+        const gameLevels = [
+            {
+                level: 1,
+                title: "Level 1: Alur Sebab-Akibat (Hulu ke Hilir)",
+                pairs: [
+                    { id: 1, left: "01. Data & Rencana", right: "Kumpulkan data akurat, pahami permintaan & rencanakan produksi" },
+                    { id: 2, left: "02. Proses Pabrik", right: "Produksi efisien sesuai rencana & kelola biaya dengan patuh" },
+                    { id: 3, left: "03. Mutu & Distribusi", right: "Pastikan mutu terjaga & distribusikan produk secara tepat dan aman" }
+                ],
+                badge: "Perintis Rantai Hulu"
+            },
+            {
+                level: 2,
+                title: "Level 2: Matriks Prioritas BFM (Q1 - Q4)",
+                pairs: [
+                    { id: 4, left: "Q1: Mesin Utama Berhenti", right: "Lakukan Segera / Urgen & Penting" },
+                    { id: 5, left: "Q2: Evaluasi PNL & Kunjungan", right: "Jadwalkan di RKB (Penting, Tidak Mendesak)" },
+                    { id: 6, left: "Q3: Rekap Absensi Rutin", right: "Delegasikan Sesuai Kewenangan" }
+                ],
+                badge: "Master Matriks Q1-Q4"
+            },
+            {
+                level: 3,
+                title: "Level 3: Perisai Mutu QCA & Factory Support",
+                pairs: [
+                    { id: 7, left: "Inspeksi QCA Pra-Kirim", right: "Retain sample per batch & kepatuhan BPOM/Halal" },
+                    { id: 8, left: "Picking & Loading DC", right: "Pastikan data order, armada, dan waktu loading akurat" }
+                ],
+                badge: "Ahli Mutu & Logistik"
+            },
+            {
+                level: 4,
+                title: "Level 4: Coaching & RKB Bulanan",
+                pairs: [
+                    { id: 9, left: "Penyusunan RKB H-7", right: "Blueprint bulanan menjawab apa, siapa, kapan, & bukti selesai" },
+                    { id: 10, left: "Coaching 4 Langkah", right: "Ubah budaya siapa salah menjadi perbaikan proses berbasis fakta" }
+                ],
+                badge: "Master BFM Mr. Bread"
+            }
+        ];
+
+        let currentGameState = {
+            playerName: "",
+            levelIdx: 0,
+            score: 0,
+            earnedBadges: [],
+            selectedLeft: null,
+            matchedCount: 0,
+            totalPairsInLevel: 0,
+            shuffledLeft: [],
+            shuffledRight: []
+        };
+
+        function goToBriefing() {
+            const nameInput = document.getElementById('player-name-input').value.trim();
+            if (!nameInput) {
+                alert("Silakan masukkan nama lengkapmu terlebih dahulu");
+                return;
+            }
+            sfxClick();
+            initAudio();
+            currentGameState.playerName = nameInput;
+            document.getElementById('welcome-player-title').textContent = `Halo, ${nameInput}`;
+            
+            document.getElementById('screen-gateway').classList.add('hidden');
+            document.getElementById('screen-briefing').classList.remove('hidden');
+        }
+
+        function startGame() {
+            sfxClick();
+            startBGM();
+            document.getElementById('screen-briefing').classList.add('hidden');
+            document.getElementById('screen-game').classList.remove('hidden');
+            loadLevel();
+        }
+
+        function loadLevel() {
+            const lvlData = gameLevels[currentGameState.levelIdx];
+            currentGameState.matchedCount = 0;
+            currentGameState.totalPairsInLevel = lvlData.pairs.length;
+            currentGameState.selectedLeft = null;
+
+            document.getElementById('current-level-num').textContent = currentGameState.levelIdx + 1;
+            document.getElementById('current-score').textContent = currentGameState.score;
+            document.getElementById('level-category').textContent = lvlData.title;
+
+            updateProgress();
+
+            document.getElementById('svg-canvas').innerHTML = '';
+
+            currentGameState.shuffledLeft = [...lvlData.pairs].sort(() => Math.random() - 0.5);
+            currentGameState.shuffledRight = [...lvlData.pairs].sort(() => Math.random() - 0.5);
+            
+            if (currentGameState.shuffledLeft.length > 1) {
+                while(currentGameState.shuffledLeft.some((item, idx) => item.id === currentGameState.shuffledRight[idx].id)) {
+                    currentGameState.shuffledRight.sort(() => Math.random() - 0.5);
+                }
+            }
+
+            const leftContainer = document.getElementById('left-nodes-container');
+            const rightContainer = document.getElementById('right-nodes-container');
+            leftContainer.innerHTML = '';
+            rightContainer.innerHTML = '';
+
+            currentGameState.shuffledLeft.forEach(pair => {
+                const btn = document.createElement('button');
+                btn.className = "left-node w-full text-left p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800 hover:border-red-500 hover:bg-slate-800 transition text-xs sm:text-sm font-medium flex items-center justify-between group cursor-pointer";
+                btn.innerHTML = `<span>${pair.left}</span><i class="fa-solid fa-circle text-xs text-slate-600 group-hover:text-red-400"></i>`;
+                btn.dataset.id = pair.id;
+                btn.onclick = () => selectLeftNode(pair.id, btn);
+                leftContainer.appendChild(btn);
+            });
+
+            currentGameState.shuffledRight.forEach(pair => {
+                const btn = document.createElement('button');
+                btn.className = "right-node w-full text-left p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800 hover:border-amber-500 hover:bg-slate-800 transition text-xs sm:text-sm font-medium flex items-center justify-between group cursor-pointer";
+                btn.innerHTML = `<i class="fa-solid fa-circle text-xs text-slate-600 group-hover:text-amber-400 mr-2"></i><span class="flex-1">${pair.right}</span>`;
+                btn.dataset.id = pair.id;
+                btn.onclick = () => selectRightNode(pair.id, btn);
+                rightContainer.appendChild(btn);
+            });
+
+            document.getElementById('feedback-box').classList.add('hidden');
+        }
+
+        function selectLeftNode(id, el) {
+            sfxClick();
+            document.querySelectorAll('#left-nodes-container button').forEach(b => {
+                if (!b.classList.contains('connected-node')) b.classList.remove('selected-node');
+            });
+            if (el.classList.contains('connected-node')) return;
+
+            el.classList.add('selected-node');
+            currentGameState.selectedLeft = id;
+        }
+
+        function selectRightNode(id, el) {
+            if (currentGameState.selectedLeft === null) {
+                sfxIncorrect();
+                showFeedback(false, "Pilih titik di Kolom A (Kiri) terlebih dahulu sebelum menghubungkannya");
+                return;
+            }
+
+            const feedbackBox = document.getElementById('feedback-box');
+            feedbackBox.classList.remove('hidden');
+
+            if (currentGameState.selectedLeft === id) {
+                sfxConnect();
+                currentGameState.score += 100;
+                currentGameState.matchedCount++;
+                document.getElementById('current-score').textContent = currentGameState.score;
+
+                const matchId = currentGameState.selectedLeft;
+                const leftEl = document.querySelector(`#left-nodes-container button[data-id='${matchId}']`);
+                leftEl.classList.remove('selected-node');
+                leftEl.classList.add('connected-node');
+                el.classList.add('connected-node');
+
+                drawConnectionLine(leftEl, el);
+
+                showFeedback(true, "Berhasil menghubungkan titik dengan tepat. Tali koneksi terbentuk.");
+                currentGameState.selectedLeft = null;
+                updateProgress();
+
+                if (currentGameState.matchedCount === currentGameState.totalPairsInLevel) {
+                    const lvlData = gameLevels[currentGameState.levelIdx];
+                    if (lvlData.badge && !currentGameState.earnedBadges.includes(lvlData.badge)) {
+                        currentGameState.earnedBadges.push(lvlData.badge);
+                        sfxBadge();
+                        document.getElementById('badge-notif-text').textContent = `Badge Terbuka: ${lvlData.badge}`;
+                        document.getElementById('badge-notification').classList.remove('hidden');
+                    }
+
+                    setTimeout(() => {
+                        document.getElementById('badge-notification').classList.add('hidden');
+                        currentGameState.levelIdx++;
+                        if (currentGameState.levelIdx < gameLevels.length) {
+                            loadLevel();
+                        } else {
+                            showResultScreen();
+                        }
+                    }, 1800);
+                }
+            } else {
+                sfxIncorrect();
+                showFeedback(false, "Titik yang kamu hubungkan belum pas dengan alur BFM. Coba pasangkan dengan konsep yang lain");
+                document.querySelector(`#left-nodes-container button[data-id='${currentGameState.selectedLeft}']`)?.classList.remove('selected-node');
+                currentGameState.selectedLeft = null;
+            }
+        }
+
+        function drawConnectionLine(leftEl, rightEl) {
+            const wrapper = document.getElementById('nodes-wrapper').getBoundingClientRect();
+            const lRect = leftEl.getBoundingClientRect();
+            const rRect = rightEl.getBoundingClientRect();
+
+            const x1 = lRect.right - wrapper.left;
+            const y1 = lRect.top + (lRect.height / 2) - wrapper.top;
+            const x2 = rRect.left - wrapper.left;
+            const y2 = rRect.top + (rRect.height / 2) - wrapper.top;
+
+            const svg = document.getElementById('svg-canvas');
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('x1', x1);
+            line.setAttribute('y1', y1);
+            line.setAttribute('x2', x2);
+            line.setAttribute('y2', y2);
+            line.setAttribute('stroke', '#10b981');
+            line.setAttribute('stroke-width', '3');
+            line.setAttribute('stroke-linecap', 'round');
+            line.setAttribute('stroke-dasharray', '6 3');
+            svg.appendChild(line);
+        }
+
+        function showFeedback(isSuccess, message) {
+            const feedbackBox = document.getElementById('feedback-box');
+            const feedbackIcon = document.getElementById('feedback-icon');
+            const feedbackTitle = document.getElementById('feedback-title');
+            const feedbackDesc = document.getElementById('feedback-desc');
+
+            feedbackBox.classList.remove('hidden');
+            if (isSuccess) {
+                feedbackBox.className = "p-4 rounded-2xl border bg-emerald-950/40 border-emerald-500/50 text-emerald-200 transition-all duration-300";
+                feedbackIcon.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400"></i>';
+                feedbackTitle.textContent = "Koneksi Tepat";
+            } else {
+                feedbackBox.className = "p-4 rounded-2xl border bg-rose-950/40 border-rose-500/50 text-rose-200 transition-all duration-300";
+                feedbackIcon.innerHTML = '<i class="fa-solid fa-circle-xmark text-rose-400"></i>';
+                feedbackTitle.textContent = "Koneksi Keliru";
+            }
+            feedbackDesc.textContent = message;
+        }
+
+        function updateProgress() {
+            const totalPairsAll = 10;
+            const completedSoFar = gameLevels.slice(0, currentGameState.levelIdx).reduce((acc, l) => acc + l.pairs.length, 0) + currentGameState.matchedCount;
+            const pct = Math.round((completedSoFar / totalPairsAll) * 100);
+
+            document.getElementById('progress-pct').textContent = pct + "%";
+            document.getElementById('progress-bar-fill').style.width = pct + "%";
+        }
+
+        function showResultScreen() {
+            sfxBadge();
+            if (bgmInterval) clearInterval(bgmInterval);
+
+            document.getElementById('screen-game').classList.add('hidden');
+            document.getElementById('screen-result').classList.remove('hidden');
+
+            document.getElementById('result-player-name').textContent = `Kerja Hebat, ${currentGameState.playerName}`;
+            document.getElementById('final-score-val').textContent = `${currentGameState.score} / 1000 Pts`;
+
+            const badgesList = document.getElementById('earned-badges-list');
+            badgesList.innerHTML = '';
+
+            currentGameState.earnedBadges.forEach(badge => {
+                const span = document.createElement('span');
+                span.className = "bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-bold px-2.5 py-1 rounded-xl flex items-center space-x-1";
+                span.innerHTML = `<i class="fa-solid fa-award mr-1"></i> ${badge}`;
+                badgesList.appendChild(span);
+            });
+        }
+
+        function restartGame() {
+            sfxClick();
+            currentGameState.levelIdx = 0;
+            currentGameState.score = 0;
+            currentGameState.earnedBadges = [];
+            currentGameState.selectedLeft = null;
+            document.getElementById('screen-result').classList.add('hidden');
+            document.getElementById('screen-gateway').classList.remove('hidden');
+            document.getElementById('player-name-input').value = '';
+            startBGM();
+        }
+    </script>
+</body>
+</html>
